@@ -1,12 +1,13 @@
-//! This crate defines methods and test for calculating modular exponentiation
-//! without overflow.
+//! Command-line Modular exponentation tool without overflow
+//!
+//! Alexander DuPree 2021
 
 /// Checked modular exponentiation. Computes x ** y (mod m) returning None if m == 0
 pub fn checked_modexp(x: u32, y: u32, m: u32) -> Option<u32> {
     if m == 0 {
         return None;
     }
-    return Some(modexp(x, y, m));
+    Some(modexp(x, y, m))
 }
 
 /// Calculates x ** y (mod m) without overflow
@@ -21,13 +22,13 @@ pub fn modexp(x: u32, y: u32, m: u32) -> u32 {
     // Use larger container for modmultiply to prevent overflow
     let m64 = m as u64;
     let mut z = modexp(x, y / 2, m) as u64;
-    z = z * z % m64;
+    z = (z * z) % m64;
 
     if y & 1 == 1 {
         // y is odd
-        z = z * x as u64 % m64;
+        z = ((z % m64) * x as u64) % m64;
     }
-    return z as u32;
+    z as u32
 }
 
 #[test]

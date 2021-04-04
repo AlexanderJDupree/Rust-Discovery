@@ -1,13 +1,17 @@
 /// Entrypoint for modexp command line utility
+///
+/// Alexander DuPree 2021
 use std::env;
 
 use modexp::modexp;
 
+/// Print a usage error message and exit
 fn error() -> ! {
     eprintln!("modexp: usage: modexp <x> <y> <m>");
     std::process::exit(1);
 }
 
+/// modexp command line utility entry point
 fn main() {
     let args: Vec<u32> = env::args()
         .skip(1)

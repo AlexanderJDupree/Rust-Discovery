@@ -14,33 +14,29 @@ pub const EXP: u64 = 65537;
 /// and testing that they satisfy `λ(pq) <= EXP` and that `λ(pq)` has no common
 /// factors with `EXP`
 pub fn genkey() -> (u32, u32) {
-    (4, 4)
+    loop {
+        let p = rsa_prime();
+        let q = rsa_prime();
+        let lambda = lcm((p - 1) as u64, (q - 1) as u64);
+        if EXP < lambda && gcd(EXP, lambda) == 1 {
+            return (p, q);
+        }
+    }
 }
 
 /// Encrypt the plaintext `msg` using the RSA public `key`
-pub fn encrypt(_key: u64, _msg: u32) -> u64 {
-    todo!();
+pub fn encrypt(key: u64, msg: u32) -> u64 {
+    modexp(msg as u64, EXP, key)
 }
 
-/// Decrupt the ciphertext `msg` using the RSA private `key` and return the
+/// Decrypt the ciphertext `msg` using the RSA private `key` and return the
 /// resulting plaintext
-pub fn decrypt(_key: (u32, u32), _msg: u64) -> u32 {
-    todo!();
-}
+pub fn decrypt((p, q): (u32, u32), msg: u64) -> u32 {
+    assert!(p != 0 && q != 0);
 
-/// Compute `λ(pq)` where `λ` is Carmichael's totient function. From wikiepedia:
-/// > Since n = pq, λ(n) = lcm(λ(p),λ(q)), and since p and q are prime,
-/// > λ(p) = φ(p) = p − 1 and likewise λ(q) = q − 1. Hence λ(n) = lcm(p − 1, q − 1)
-fn carmichael(p: u64, q: u64) -> u64 {
-    lcm(p - 1, q - 1)
-}
+    let key = (p as u64) * (q as u64);
+    let lambda = lcm((p - 1) as u64, (q - 1) as u64);
+    let d = modinverse(EXP, lambda);
 
-#[cfg(test)]
-mod tests {
-    use crate::genkey;
-
-    #[test]
-    fn trivial_test() {
-        assert_eq!(genkey().1, 4);
-    }
+    modexp(msg, d, key) as u32
 }

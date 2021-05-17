@@ -1,6 +1,6 @@
 # toy-rsa
 
-Simple, and very easily crackable, RSA library that provides methods for
+Simple RSA library that provides methods for
 generating RSA public/private key pairs as well as encryption and decryption of
 messages.
 
@@ -28,3 +28,6 @@ parsers so I used the `clap` crate for this program and found it to be very
 ergonomic. While writing this program I also picked up on some File IO basics and
 learned more about the different string types in Rust like the `PathBuf` and `&Path`
 types.
+
+Overall, this was a very fun little project. I really didn't run into any issues
+and thought that the subject matter of RSA encrytpion was very interesting.
